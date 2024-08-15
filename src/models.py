@@ -7,43 +7,45 @@ from eralchemy2 import render_er
 
 Base = declarative_base()
 
-class Usuario(Base):
-    __tablename__ = 'usuario'
-    usuario_id = Column(Integer, primary_key=True)
-    nombre = Column(String(250), nullable=False)
-    apellido = Column(String(250), nullable=False)
+class user(Base):
+    __tablename__ = 'user'
+    user_id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    last_name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False, unique=True)
     password = Column(String(250), nullable=False)
-    fecha_suscripcion = Column(String(250))
+    subscription = Column(String(250))
 
-  
+    favorite = relationship('favorite', backref='user')
 
-class Personaje(Base):
-    __tablename__ = 'personaje'
-    personaje_id = Column(Integer, primary_key=True)
-    nombre = Column(String(250), nullable=False)
-    genero = Column(String(250))
-    especie = Column(String(250))
+class character(Base):
+    __tablename__ = 'character'
+    character_id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    gender = Column(String(250))
+    species = Column(String(250))
 
+    favorite = relationship('favorite', backref='Character')
 
-class Planeta(Base):
-    __tablename__ = 'planeta'
-    planeta_id = Column(Integer, primary_key=True)
-    nombre = Column(String(250), nullable=False)
-    clima = Column(String(250))
-    terreno = Column(String(250))
+class planet(Base):
+    __tablename__ = 'planet'
+    planet_id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    climate = Column(String(250))
+    land = Column(String(250))
 
+    favorite = relationship('favorite', backref='planet')
 
-class Favorito(Base):
-    __tablename__ = 'favorito'
-    favorito_id = Column(Integer, primary_key=True)
-    usuario_id = Column(Integer, ForeignKey('usuario.id'), nullable=False)
-    personaje_id = Column(Integer, ForeignKey('personaje.id'))
-    planeta_id = Column(Integer, ForeignKey('planeta.id'))
+class favorite(Base):
+    __tablename__ = 'favorite'
+    favorite_id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('user.user_id'), nullable=False)
+    character_id = Column(Integer, ForeignKey('character.character_id'))
+    planet_id = Column(Integer, ForeignKey('planet.planet_id'))
 
-    usuario = relationship('Usuario')
-    personaje = relationship('Personaje')
-    planeta = relationship('Planeta')
+    user = relationship('User', backref='favorite')
+    character = relationship('character', backref='favorite')
+    planet = relationship('planet', backref='favorite')
 
 
 render_er(Base, 'diagram.png')
